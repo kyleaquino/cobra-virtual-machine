@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cobra.ide.CobraIDEController">
+    <children>
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <MenuBar layoutX="-1.0" layoutY="1.0" prefHeight="29.0" prefWidth="800.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Save" />
+              <MenuItem mnemonicParsing="false" onAction="#closeFile" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#quitProgram" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Redo" />
+                  <MenuItem mnemonicParsing="false" text="Copy" />
+                  <MenuItem mnemonicParsing="false" text="Paste" />
+                  <MenuItem mnemonicParsing="false" text="Select All" />
+                  <MenuItem mnemonicParsing="false" text="Select None" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Program">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#runBuildProgram" text="Build &amp; Run" />
+                  <MenuItem mnemonicParsing="false" onAction="#buildProgram" text="Build" />
+                  <MenuItem mnemonicParsing="false" onAction="#runProgram" text="Run" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Cobra IDE Help" />
+                  <MenuItem mnemonicParsing="false" text="About Cobra" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <TextArea editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
+      <TextArea fx:id="workspace" layoutX="11.0" layoutY="103.0" prefHeight="295.0" prefWidth="778.0" />
+      <Button layoutX="318.0" layoutY="47.0" mnemonicParsing="false" text="Run" />
+      <Button layoutX="434.0" layoutY="49.0" mnemonicParsing="false" text="Build &amp; Run" />
+      <Button layoutX="372.0" layoutY="48.0" mnemonicParsing="false" text="Build" />
+      <Button layoutX="71.0" layoutY="43.0" mnemonicParsing="false" onAction="#openFile" text="Open" />
+      <Button layoutX="135.0" layoutY="44.0" mnemonicParsing="false" onAction="#saveFile" text="Save" />
+      <Button layoutX="194.0" layoutY="45.0" mnemonicParsing="false" text="Undo" />
+      <Button layoutX="256.0" layoutY="46.0" mnemonicParsing="false" text="Redo" />
+      <Text layoutX="13.0" layoutY="418.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output:" />
+      <Text layoutX="12.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
+      <Button fx:id="newButton" contentDisplay="BOTTOM" layoutX="13.0" layoutY="42.0" mnemonicParsing="false" onAction="#newFile" text="New" />
+    </children>
+</AnchorPane>
