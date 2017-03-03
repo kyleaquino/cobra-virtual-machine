@@ -48,7 +48,7 @@
         </menus>
       </MenuBar>
       <TextArea editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
-      <TextArea fx:id="workspace" layoutX="11.0" layoutY="103.0" prefHeight="295.0" prefWidth="778.0" />
+      <TextArea fx:id="workspace" layoutX="11.0" layoutY="103.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="295.0" prefWidth="778.0" />
       <Button layoutX="315.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" text="Run" />
       <Button layoutX="431.0" layoutY="42.0" mnemonicParsing="false" prefHeight="40.0" text="Build &amp; Run" />
       <Button layoutX="369.0" layoutY="41.0" mnemonicParsing="false" prefHeight="40.0" text="Build" />
@@ -57,7 +57,7 @@
       <Button layoutX="191.0" layoutY="38.0" mnemonicParsing="false" prefHeight="40.0" text="Undo" />
       <Button layoutX="253.0" layoutY="39.0" mnemonicParsing="false" prefHeight="40.0" text="Redo" />
       <Text layoutX="13.0" layoutY="418.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output:" />
-      <Text layoutX="12.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
+      <Text fx:id="filename" layoutX="12.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
       <Button fx:id="newButton" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#newFile" prefHeight="40.0" prefWidth="47.0" text="New" />
     </children>
 </AnchorPane>

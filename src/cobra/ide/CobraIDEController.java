@@ -47,6 +47,11 @@ public class CobraIDEController implements Initializable {
         //Image newFile = new Image(getClass().getResourceAsStream("resources/newfile.png"));
         //newButton.setGraphic(new ImageView(newFile));
     }
+    
+    @FXML
+    private void updateWorkspace(){
+        changed = true;
+    }
 
     @FXML
     private void newFile(){
@@ -61,6 +66,7 @@ public class CobraIDEController implements Initializable {
     private void saveFile(){
         Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
         Alert error = new Alert(AlertType.ERROR,"ERROR: Cannot Write File");
+        Alert sucess = new Alert(AlertType.INFORMATION, "File Saved");
         
         if (changed) {
             Optional<ButtonType> result = confirm.showAndWait();
@@ -76,7 +82,6 @@ public class CobraIDEController implements Initializable {
             return;
 	}
         String text = workspace.getText();
-	System.out.println(text);
 	try (PrintWriter writer = new PrintWriter(file);){
             if (!file.canWrite())
 		throw new Exception("Cannot write file!"); 
@@ -96,8 +101,8 @@ public class CobraIDEController implements Initializable {
         
         if (file != null){
             workspace.setText(read(file));
+            filename.setText("FILENAME: "+file.getName());
         }
-     
     }
     
     @FXML
