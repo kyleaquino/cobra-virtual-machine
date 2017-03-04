@@ -15,8 +15,6 @@ import static java.lang.System.exit;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -40,8 +38,6 @@ public class CobraIDEController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         initButtons();
-        
-
     }
     
     
