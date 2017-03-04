@@ -157,6 +157,9 @@ public class CobraIDEController implements Initializable {
     
     private boolean changed = false;
     private File file;
+    private FileWriter filewr;
+    private PrintWriter printwr;
+    private BufferedReader buffwr;
     private FileChooser dialog = new FileChooser(); 
     private Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
     private Alert error = new Alert(AlertType.ERROR,"Operation Error");
