@@ -43,6 +43,7 @@ public class CobraIDEController implements Initializable {
 
     }
     
+    
     private void initButtons(){
         //Image newFile = new Image(getClass().getResourceAsStream("resources/newfile.png"));
         //newButton.setGraphic(new ImageView(newFile));
@@ -54,7 +55,7 @@ public class CobraIDEController implements Initializable {
     }
 
     @FXML
-    private void newFile(){
+    private void newFile() throws IOException{
         if (changed)
             saveFile();
 	filename = null;
@@ -63,10 +64,7 @@ public class CobraIDEController implements Initializable {
     }
     
     @FXML
-    private void saveFile(){
-        Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
-        Alert error = new Alert(AlertType.ERROR,"ERROR: Cannot Write File");
-        Alert sucess = new Alert(AlertType.INFORMATION, "File Saved");
+    private void saveFile() throws IOException{
         
         if (changed) {
             Optional<ButtonType> result = confirm.showAndWait();
@@ -74,13 +72,10 @@ public class CobraIDEController implements Initializable {
                 return;
         }	
         if (file == null) {
-            try {
-                save(workspace.getText(),file);
-            } catch (IOException ex) {
-                Logger.getLogger(CobraIDEController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return;
+           save("Save");
+           return;
 	}
+        
         String text = workspace.getText();
 	try (PrintWriter writer = new PrintWriter(file);){
             if (!file.canWrite())
@@ -94,10 +89,10 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void openFile() throws IOException{
-        FileChooser openDialog = new FileChooser();
-        openDialog.setTitle("Open Source File");
+        dialog = new FileChooser();
+        dialog.setTitle("Open Source File");
         primaryStage = (Stage)workspace.getScene().getWindow();
-        file = openDialog.showOpenDialog(primaryStage);
+        file = dialog.showOpenDialog(primaryStage);
         
         if (file != null){
             workspace.setText(read(file));
@@ -143,16 +138,29 @@ public class CobraIDEController implements Initializable {
         return stringBuffer.toString();    
     }
     
-    private void save(String text,File file) throws IOException{
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(text);
-        }
+    private void save(String dialogTitle) throws IOException{
+        dialog.setTitle(dialogTitle);
+        primaryStage = (Stage)workspace.getScene().getWindow();
+        file = dialog.showSaveDialog(primaryStage);
+        
+        if(file!=null)
+            return;
+        
+        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+        fileWriter.write(workspace.getText());
+        changed = false;
+        primaryStage.setTitle("Cobra IDE: " + file.getName());
+        filename.setText("FILENAME: "+file.getName());
          
     }
     
     
-    public boolean changed = false;
+    private boolean changed = false;
     private File file;
+    private FileChooser dialog = new FileChooser(); 
+    private Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
+    private Alert error = new Alert(AlertType.ERROR,"Operation Error");
+    private Alert success = new Alert(AlertType.INFORMATION, "Operation Success!");
     
     @FXML
     TextArea workspace = new TextArea();
