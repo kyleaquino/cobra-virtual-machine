@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import static java.lang.System.exit;
 import java.net.URL;
@@ -49,6 +50,7 @@ public class CobraIDEController implements Initializable {
         //newButton.setGraphic(new ImageView(newFile));
     }
     
+    
     @FXML
     private void updateWorkspace(){
         changed = true;
@@ -68,7 +70,7 @@ public class CobraIDEController implements Initializable {
         
         if (changed) {
             Optional<ButtonType> result = confirm.showAndWait();
-            if (result.get() == ButtonType.NO)
+            if (result.get() != ButtonType.YES)
                 return;
         }	
         if (file == null) {
@@ -112,8 +114,22 @@ public class CobraIDEController implements Initializable {
     }
     
     @FXML
-    private void runProgram(){
+    private void runProgram() throws IOException, InterruptedException{
+        String command = "cd ~/NetBeansProjects/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm";
         
+        String[] args = new String[] {"/bin/bash", "-c", "cd ~/NetBeansProjects"
+                + "/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
+        
+        Process proc = new ProcessBuilder(args).start();
+         BufferedReader reader =  
+              new BufferedReader(new InputStreamReader(proc.getInputStream()));
+
+        String line = "", out = "";
+        while((line = reader.readLine()) != null) {
+            out = out + line + "\n";
+            output.setText(out);
+        }
+        proc.waitFor();   
     }
     
     @FXML
@@ -121,7 +137,7 @@ public class CobraIDEController implements Initializable {
     }
     
     @FXML
-    private void runBuildProgram(){
+    private void runBuildProgram() throws IOException, InterruptedException{
         buildProgram();
         runProgram();
     }
@@ -146,7 +162,7 @@ public class CobraIDEController implements Initializable {
         if(file!=null)
             return;
         
-        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+        FileWriter fileWriter = new FileWriter(file);
         fileWriter.write(workspace.getText());
         changed = false;
         primaryStage.setTitle("Cobra IDE: " + file.getName());
@@ -167,6 +183,9 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     TextArea workspace = new TextArea();
+    
+    @FXML
+    TextArea output = new TextArea();
     
     @FXML
     Text filename = new Text();
