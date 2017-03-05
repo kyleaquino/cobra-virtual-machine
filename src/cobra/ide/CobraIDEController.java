@@ -135,7 +135,6 @@ public class CobraIDEController implements Initializable {
         Process proc = new ProcessBuilder(args).start();
          BufferedReader reader =  
               new BufferedReader(new InputStreamReader(proc.getInputStream()));
-         System.out.println("pass");
         String line = "", out = "";
         while((line = reader.readLine()) != null) {
             out = out + line + "\n";
