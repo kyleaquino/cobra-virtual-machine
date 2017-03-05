@@ -51,7 +51,7 @@
             </Menu>
         </menus>
       </MenuBar>
-      <TextArea editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
+      <TextArea fx:id="output" editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
       <TextArea fx:id="workspace" layoutX="11.0" layoutY="111.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="288.0" prefWidth="778.0" />
       <Button fx:id="newButton" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" onAction="#newFile" prefHeight="40.0" prefWidth="40.0">
          <graphic>
@@ -108,7 +108,7 @@
          <effect>
             <SepiaTone level="0.15" />
          </effect></Button>
-      <Button fx:id="runButton" layoutX="305.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
+      <Button fx:id="runButton" layoutX="305.0" layoutY="40.0" mnemonicParsing="false" onAction="#runProgram" prefHeight="40.0" prefWidth="40.0">
          <graphic>
             <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                <image>
