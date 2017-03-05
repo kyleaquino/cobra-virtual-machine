@@ -7,6 +7,7 @@ package cobra.ide;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,8 +25,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -39,18 +40,20 @@ public class CobraIDEController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         initButtons();
-        
-
     }
     
     
     private void initButtons(){
-        //Image newFile = new Image(getClass().getResourceAsStream("resources/newfile.png"));
-        //newButton.setGraphic(new ImageView(newFile));
+       newButton.setTooltip(new Tooltip("New"));
+       saveButton.setTooltip(new Tooltip("Save"));
+       openButton.setTooltip(new Tooltip("Open"));
+       redoButton.setTooltip(new Tooltip("Redo"));
+       undoButton.setTooltip(new Tooltip("Undo"));
+       buildButton.setTooltip(new Tooltip("Build"));
+       runButton.setTooltip(new Tooltip("Run"));
+       buildRunButton.setTooltip(new Tooltip("Build & Run"));
     }
-    
     
     @FXML
     private void updateWorkspace(){
@@ -61,33 +64,26 @@ public class CobraIDEController implements Initializable {
     private void newFile() throws IOException{
         if (changed)
             saveFile();
-        filename.setText("FILENAME:");
+	filename.setText("FILENAME: ");
 	workspace.setText("");
 	changed = false;
     }
     
     @FXML
     private void saveFile() throws IOException{
-        Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
-        Alert error = new Alert(AlertType.ERROR,"Operation Error");
+        
         if (changed) {
             Optional<ButtonType> result = confirm.showAndWait();
             if (result.get() == ButtonType.NO)
                 return;
-        }	
-        if (file == null) {
+        }
+        
+        if (file == null)
            save("Save");
-           return;
-	}
-        changed = false;
-        String text = workspace.getText();
-	try (PrintWriter writer = new PrintWriter(file);){
-            if (!file.canWrite())
-		throw new Exception("Cannot write file!"); 
-            writer.write(text);
-       	}catch (Exception e) {
-            error.showAndWait();
-	}
+        else
+            editFile();
+        
+        file=null;
     }
     
     @FXML
@@ -99,13 +95,28 @@ public class CobraIDEController implements Initializable {
         
         if (file != null){
             workspace.setText(read(file));
-            filename.setText("FILENAME: "+file.getName());
+            filename.setText("FILENAME: "+file);
         }
+        else
+            file=null;
+    }
+    
+    @FXML
+    private void undo() throws IOException{
+         workspace.undo();
+    }
+    
+    @FXML
+    private void redo() throws IOException{
+         workspace.redo();
     }
     
     @FXML
     private void closeFile(){
-        
+        file=null;
+        filename.setText("FILENAME: ");
+	workspace.setText("");
+	changed = false;
     }
     
     
@@ -118,8 +129,8 @@ public class CobraIDEController implements Initializable {
     private void runProgram() throws IOException, InterruptedException{
         String command = "cd ~/NetBeansProjects/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm";
             
-        String[] args = new String[] {"/bin/bash", "-c", "cd ~/NetBeansProjects"
-                + "/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
+        String[] args = new String[] {"/bin/bash", "-c", 
+            "/home/kyle/NetBeansProjects/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
         
         Process proc = new ProcessBuilder(args).start();
          BufferedReader reader =  
@@ -130,7 +141,7 @@ public class CobraIDEController implements Initializable {
             out = out + line + "\n";
             output.setText(out);
         }
-        proc.waitFor();   
+        proc.waitFor(); 
     }
     
     @FXML
@@ -138,9 +149,13 @@ public class CobraIDEController implements Initializable {
     }
     
     @FXML
-    private void runBuildProgram() throws IOException, InterruptedException{
-        buildProgram();
-        runProgram();
+    private void runBuildProgram(){
+        try {
+            buildProgram();
+            runProgram();
+        } catch (InterruptedException | IOException ex) {
+            Logger.getLogger(CobraIDEController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private String read(File file) throws IOException{
@@ -150,6 +165,7 @@ public class CobraIDEController implements Initializable {
         
         while ((text = bufferedReader.readLine()) != null) {
             stringBuffer.append(text);
+            stringBuffer.append("\n");
         }
 
         return stringBuffer.toString();    
@@ -158,35 +174,57 @@ public class CobraIDEController implements Initializable {
     private void save(String dialogTitle) throws IOException{
         FileChooser dialog = new FileChooser();
         dialog.setTitle(dialogTitle);
+        
         primaryStage = (Stage)workspace.getScene().getWindow();
-        file = new File(dialog.showSaveDialog(primaryStage).getAbsolutePath() + ".txt");
-        if(file == null)
-            return;
-        PrintWriter printWriter = new PrintWriter(file);
-        printWriter.write(workspace.getText());
-        changed = false;
-        primaryStage.setTitle("Cobra IDE: " + file.getName());
-        filename.setText("FILENAME: "+file.getName()); 
+        file = dialog.showSaveDialog(primaryStage);
+        
+        try (FileWriter fileWriter = new FileWriter(file.getAbsoluteFile()+".cob")) {
+            fileWriter.write(workspace.getText());
+            changed = false;
+            filename.setText("FILENAME: "+file);
+        }
+        
+        file=null;
+         
     }
     
-    @FXML
-    private void undo() throws IOException{
-        workspace.undo();
+    private void editFile() throws FileNotFoundException{
+
+        String text = workspace.getText();
+        try (PrintWriter writer = new PrintWriter(file)) {
+                writer.write(text);
+                changed = false;
+                filename.setText("FILENAME: "+file);
+        }
+        
+        file=null;
     }
     
-    @FXML
-    private void redo() throws IOException{
-        workspace.redo();
+    private void saveAs() throws FileNotFoundException{
+        FileChooser dialog = new FileChooser();
+        dialog.setTitle("Save As");
+        
+        primaryStage = (Stage)workspace.getScene().getWindow();
+        file = dialog.showSaveDialog(primaryStage);
+        
+        String text = workspace.getText();
+        try (PrintWriter writer = new PrintWriter(file)) {
+                writer.write(text);
+                changed = false;
+                filename.setText("FILENAME: "+file);
+        }
+        
+        file=null;
     }
     
-    private File file;
-    private boolean changed = false; 
+    
+    private boolean changed = false;
+    private File file; 
+    private final Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
+    private final Alert error = new Alert(AlertType.ERROR,"Operation Error");
     
     @FXML
     TextArea workspace = new TextArea();
-    
-    @FXML
-    TextArea output = new TextArea();
     
     @FXML
     Text filename = new Text();
@@ -195,93 +233,34 @@ public class CobraIDEController implements Initializable {
     Button newButton = new Button();
     
     @FXML
+    Button openButton = new Button();
+    
+    @FXML
+    Button saveButton = new Button();
+    
+    @FXML
+    Button undoButton = new Button();
+    
+    @FXML
+    Button redoButton = new Button();
+    
+    @FXML
+    Button runButton = new Button();
+    
+    @FXML
+    Button buildButton = new Button();
+    
+    @FXML
+    Button buildRunButton = new Button();
+    
+    @FXML
     AnchorPane stage;
     
     @FXML
     Stage primaryStage;
     
     @FXML
-    Label label1, label2, label3, label4, label5, label6, label7, label8;
-    
-    @FXML
-    private void newHover(){
-        label1.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void newExit(){
-        label1.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void openHover(){
-        label2.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void openExit(){
-        label2.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void saveHover(){
-        label3.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void saveExit(){
-        label3.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void undoHover(){
-        label4.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void undoExit(){
-        label4.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void redoHover(){
-        label5.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void redoExit(){
-        label5.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void runHover(){
-        label6.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void runExit(){
-        label6.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void buildHover(){
-        label7.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void buildExit(){
-        label7.setOpacity(0.00);
-    }
-    
-    @FXML
-    private void bnrHover(){
-        label8.setOpacity(1.00);
-    }
-    
-    @FXML
-    private void bnrExit(){
-        label8.setOpacity(0.00);
-    }
+    TextArea output = new TextArea();
     
     
 }

@@ -6,13 +6,17 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.effect.ImageInput?>
+<?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" fx:id="stage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cobra.ide.CobraIDEController">
     <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TAN" height="23.0" layoutX="10.0" layoutY="404.0" stroke="WHITE" strokeType="INSIDE" width="778.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TAN" height="23.0" layoutX="10.0" layoutY="90.0" stroke="WHITE" strokeType="INSIDE" width="778.0" />
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <MenuBar layoutX="-1.0" layoutY="1.0" prefHeight="29.0" prefWidth="800.0">
         <menus>
@@ -26,10 +30,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Undo" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
+              <MenuItem mnemonicParsing="false" onAction="#undo" text="Undo" />
+                  <MenuItem mnemonicParsing="false" onAction="#redo" text="Redo" />
                   <MenuItem mnemonicParsing="false" text="Select All" />
                   <MenuItem mnemonicParsing="false" text="Select None" />
             </items>
@@ -49,81 +51,97 @@
             </Menu>
         </menus>
       </MenuBar>
-      <TextArea fx:id="output" editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
-      <TextArea fx:id="workspace" layoutX="11.0" layoutY="103.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="295.0" prefWidth="778.0" />
-      <Button fx:id="newButton" layoutX="19.0" layoutY="41.0" mnemonicParsing="false" onAction="#newFile" onMouseEntered="#newHover" onMouseExited="#newExit" prefHeight="40.0" prefWidth="40.0" text="New">
+      <TextArea editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
+      <TextArea fx:id="workspace" layoutX="11.0" layoutY="111.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="288.0" prefWidth="778.0" />
+      <Button fx:id="newButton" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" onAction="#newFile" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/new.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/new.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Label fx:id="label1" alignment="CENTER" layoutX="18.0" layoutY="28.0" opacity="0.0" prefHeight="0.0" prefWidth="41.0" text="New" textAlignment="CENTER" wrapText="true" />
-      <Button layoutX="70.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" onMouseEntered="#openHover" onMouseExited="#openExit" prefHeight="40.0" prefWidth="41.0" text="Open">
+      <Button fx:id="openButton" layoutX="69.0" layoutY="40.0" mnemonicParsing="false" onAction="#openFile" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/open.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/open.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="127.0" layoutY="41.0" mnemonicParsing="false" onAction="#saveFile" onMouseEntered="#saveHover" onMouseExited="#saveExit" prefHeight="40.0" prefWidth="40.0" text="Save">
+      <Button fx:id="saveButton" layoutX="128.0" layoutY="40.0" mnemonicParsing="false" onAction="#saveFile" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/savee.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/savee.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="182.0" layoutY="41.0" mnemonicParsing="false" onAction="#undo" onMouseEntered="#undoHover" onMouseExited="#undoExit" prefHeight="40.0" prefWidth="41.0" text="Undo">
+      <Button fx:id="undoButton" layoutX="187.0" layoutY="40.0" mnemonicParsing="false" onAction="#undo" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/undo.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/undo.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="237.0" layoutY="41.0" mnemonicParsing="false" onAction="#redo" onMouseEntered="#redoHover" onMouseExited="#redoExit" prefHeight="40.0" prefWidth="40.0" text="Redo">
+      <Button fx:id="redoButton" layoutX="246.0" layoutY="40.0" mnemonicParsing="false" onAction="#redo" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/redo.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/redo.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="293.0" layoutY="41.0" mnemonicParsing="false" onAction="#runProgram" onMouseEntered="#runHover" onMouseExited="#runExit" prefHeight="40.0" prefWidth="40.0" text="Run">
+      <Button fx:id="runButton" layoutX="305.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/play.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/play.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="348.0" layoutY="41.0" mnemonicParsing="false" onMouseEntered="#buildHover" onMouseExited="#buildExit" prefHeight="40.0" prefWidth="41.0" text="Build">
+      <Button fx:id="buildButton" layoutX="364.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/build.jpg" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/build.jpg" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Button layoutX="407.0" layoutY="41.0" mnemonicParsing="false" onMouseEntered="#bnrHover" onMouseExited="#bnrExit" prefHeight="40.0" prefWidth="41.0" text="Build &amp; Run">
+      <Button fx:id="buildRunButton" layoutX="423.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/bnr.png" />
+               </image>
+            </ImageView>
+         </graphic>
          <effect>
-            <ImageInput>
-               <source>
-                  <Image url="file:/C:/Users/ezaF/Documents/NetBeansProjects/cobra-virtual-machine-master/src/cobra/resources/bnr.png" />
-               </source>
-            </ImageInput>
+            <SepiaTone level="0.15" />
          </effect></Button>
-      <Text layoutX="13.0" layoutY="418.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output:" />
-      <Text fx:id="filename" layoutX="12.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
-      <Label fx:id="label2" alignment="CENTER" layoutX="70.0" layoutY="28.0" opacity="0.0" prefHeight="0.0" prefWidth="41.0" text="Open" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label3" alignment="CENTER" layoutX="126.0" layoutY="28.0" opacity="0.0" prefHeight="0.0" prefWidth="41.0" text="Save" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label4" alignment="CENTER" layoutX="182.0" layoutY="28.0" opacity="0.0" prefHeight="17.0" prefWidth="41.0" text="Undo" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label5" alignment="CENTER" layoutX="237.0" layoutY="28.0" opacity="0.0" prefHeight="17.0" prefWidth="41.0" text="Redo" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label6" alignment="CENTER" layoutX="293.0" layoutY="28.0" opacity="0.0" prefHeight="17.0" prefWidth="41.0" text="Run" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label7" alignment="CENTER" layoutX="348.0" layoutY="28.0" opacity="0.0" prefHeight="17.0" prefWidth="41.0" text="Build" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="label8" alignment="CENTER" layoutX="393.0" layoutY="28.0" opacity="0.0" prefHeight="17.0" prefWidth="69.0" text="Build &amp; Run" textAlignment="CENTER" wrapText="true" />
+      <Text layoutX="14.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output:" />
+      <Text fx:id="filename" layoutX="15.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
     </children>
 </AnchorPane>
