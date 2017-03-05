@@ -127,10 +127,8 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void runProgram() throws IOException, InterruptedException{
-        String command = "cd ~/NetBeansProjects/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm";
-            
         String[] args = new String[] {"/bin/bash", "-c", 
-            "cd /home/kyle/NetBeansProjects/Cobra-IDE/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
+            "cd /home/kyle/NetBeansProjects/cobra-virtual-machine-master/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
         
         Process proc = new ProcessBuilder(args).start();
          BufferedReader reader =  
