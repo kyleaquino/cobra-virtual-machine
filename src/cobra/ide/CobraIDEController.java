@@ -32,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+
 /**
  *
  * @author kyle
@@ -40,9 +41,9 @@ public class CobraIDEController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         initButtons();
     }
-    
     
     private void initButtons(){
        newButton.setTooltip(new Tooltip("New"));
@@ -127,18 +128,18 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void runProgram() throws IOException, InterruptedException{
-        String[] args = new String[] {"/bin/bash", "-c", 
-            "cd /home/kyle/NetBeansProjects/cobra-virtual-machine-master/src/cobra/cobraVM; python main.py test.vm", "with", "args"};
+        String line;
+        String[] args = exec("test.vm");
         
         Process proc = new ProcessBuilder(args).start();
-         BufferedReader reader =  
+        BufferedReader reader =  
               new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        String line = "", out = "";
+        
         while((line = reader.readLine()) != null) {
-            out = out + line + "\n";
-            output.setText(out);
+            output.appendText(line + "\n");
         }
-        proc.waitFor(); 
+        
+        proc.waitFor();
     }
     
     @FXML
@@ -214,11 +215,27 @@ public class CobraIDEController implements Initializable {
         file=null;
     }
     
+    private String[] exec(String src){
+        String os = System.getProperty("os.name").toLowerCase();
+        
+        String[] linuxExec = new String[] {"/bin/bash", "-c", "cd "+System.getProperty("user.dir")+
+                "/src/cobra/cobraVM;"+"python main.py "+ src};
+        
+        String[] winExec = new String[] {"CMD", "C", "cd "+System.getProperty("user.dir")+
+                "/src/cobra/cobraVM;"+"python main.py "+ src};
+        
+        if (os.equals("linux"))
+            return linuxExec;
+        if (os.equals("win"))
+            return winExec;
+        else
+            return null;
+        
+    }
     
     private boolean changed = false;
     private File file; 
     private final Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
-    private final Alert error = new Alert(AlertType.ERROR,"Operation Error");
     
     @FXML
     TextArea workspace = new TextArea();
