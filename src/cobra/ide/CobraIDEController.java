@@ -83,8 +83,6 @@ public class CobraIDEController implements Initializable {
            save("Save");
         else
             editFile();
-        
-        file=null;
     }
     
     @FXML
@@ -98,8 +96,6 @@ public class CobraIDEController implements Initializable {
             workspace.setText(read(file));
             filename.setText("FILENAME: "+file);
         }
-        else
-            file=null;
     }
     
     @FXML
@@ -128,18 +124,23 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void runProgram() throws IOException, InterruptedException{
-        String line;
-        String[] args = exec("test.vm");
+        saveFile();
+        if (file != null){
+            String line;
+            String[] args = exec(file.getAbsolutePath());
+            Process proc = new ProcessBuilder(args).start();
+            BufferedReader reader =  
+                new BufferedReader(new InputStreamReader(proc.getInputStream()));
         
-        Process proc = new ProcessBuilder(args).start();
-        BufferedReader reader =  
-              new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            while((line = reader.readLine()) != null) {
+                output.appendText(line + "\n");
+            }
         
-        while((line = reader.readLine()) != null) {
-            output.appendText(line + "\n");
+            proc.waitFor();
+        }else{
+            error.showAndWait();
         }
         
-        proc.waitFor();
     }
     
     @FXML
@@ -174,6 +175,7 @@ public class CobraIDEController implements Initializable {
         dialog.setTitle(dialogTitle);
         
         primaryStage = (Stage)workspace.getScene().getWindow();
+        
         file = dialog.showSaveDialog(primaryStage);
         
         try (FileWriter fileWriter = new FileWriter(file.getAbsoluteFile()+".cob")) {
@@ -181,9 +183,6 @@ public class CobraIDEController implements Initializable {
             changed = false;
             filename.setText("FILENAME: "+file);
         }
-        
-        file=null;
-         
     }
     
     private void editFile() throws FileNotFoundException{
@@ -194,8 +193,6 @@ public class CobraIDEController implements Initializable {
                 changed = false;
                 filename.setText("FILENAME: "+file);
         }
-        
-        file=null;
     }
     
     private void saveAs() throws FileNotFoundException{
@@ -211,8 +208,6 @@ public class CobraIDEController implements Initializable {
                 changed = false;
                 filename.setText("FILENAME: "+file);
         }
-        
-        file=null;
     }
     
     private String[] exec(String src){
@@ -236,6 +231,7 @@ public class CobraIDEController implements Initializable {
     private boolean changed = false;
     private File file; 
     private final Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
+    private final Alert error = new Alert(AlertType.ERROR,"SOURCE FILE NOT FOUND");
     
     @FXML
     TextArea workspace = new TextArea();
