@@ -198,9 +198,9 @@ public class CobraIDEController implements Initializable {
     private String exec(String src){
         String os = System.getProperty("os.name").toLowerCase();
         
-        String linuxExec = "usr/bin/xterm python "+
+        String linuxExec = "xterm -hold -e python " +
                 System.getProperty("user.dir")+
-                "\\src\\cobra\\cobraVM\\main.py "+src;
+                "/src/cobra/cobraVM/main.py "+src;
         
         String winExec = "cmd.exe /C start python "+
                 System.getProperty("user.dir")+
