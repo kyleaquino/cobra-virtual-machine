@@ -24,7 +24,7 @@ public class CobraIDE extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
-        stage.setTitle("Cobra IDE");
+        stage.setTitle("Cobra++ IDE");
         stage.setResizable(false);
         stage.show();
     }

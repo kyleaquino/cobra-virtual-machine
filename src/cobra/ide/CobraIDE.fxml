@@ -15,7 +15,6 @@
 
 <AnchorPane id="AnchorPane" fx:id="stage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cobra.ide.CobraIDEController">
     <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TAN" height="23.0" layoutX="10.0" layoutY="404.0" stroke="WHITE" strokeType="INSIDE" width="778.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TAN" height="23.0" layoutX="10.0" layoutY="90.0" stroke="WHITE" strokeType="INSIDE" width="778.0" />
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <MenuBar layoutX="-1.0" layoutY="1.0" prefHeight="29.0" prefWidth="800.0">
@@ -51,8 +50,7 @@
             </Menu>
         </menus>
       </MenuBar>
-      <TextArea fx:id="output" editable="false" layoutX="11.0" layoutY="425.0" prefHeight="165.0" prefWidth="778.0" />
-      <TextArea fx:id="workspace" layoutX="11.0" layoutY="111.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="288.0" prefWidth="778.0" />
+      <TextArea fx:id="workspace" layoutX="11.0" layoutY="111.0" onKeyPressed="#updateWorkspace" onKeyReleased="#updateWorkspace" onKeyTyped="#updateWorkspace" prefHeight="480.0" prefWidth="778.0" />
       <Button fx:id="newButton" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" onAction="#newFile" prefHeight="40.0" prefWidth="40.0">
          <graphic>
             <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
@@ -141,7 +139,6 @@
          <effect>
             <SepiaTone level="0.15" />
          </effect></Button>
-      <Text layoutX="14.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output:" />
       <Text fx:id="filename" layoutX="15.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filename:" />
     </children>
 </AnchorPane>

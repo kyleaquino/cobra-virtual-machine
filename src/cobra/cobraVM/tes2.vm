@@ -5,13 +5,18 @@ e>>3
 p>>ADD>>20,3
 q>>SUB>>10,4,3
 s>>MUL>>5,4,3
-u>>MOD>>67,y,t
+u>>MOD>>y,t
 a>>DIV>>15,3
+p>>98
 OUT>>The p is
 OUT>>p
+OUT>>MUL>>7,8
 r>>ADD>>91,9
+r>>p
 OUT>>THE R IS:
 OUT>>r
 OUT>>ALL YOUR VARIABLES ARE:
 OUT>>ALL
+SCN>>SCANNING
+OUT>>SCANNING
 END

@@ -72,13 +72,6 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void saveFile() throws IOException{
-        
-        if (changed) {
-            Optional<ButtonType> result = confirm.showAndWait();
-            if (result.get() == ButtonType.NO)
-                return;
-        }
-        
         if (file == null)
            save("Save");
         else
@@ -125,26 +118,18 @@ public class CobraIDEController implements Initializable {
     @FXML
     private void runProgram() throws IOException, InterruptedException{
         saveFile();
-        if (file != null){
-            String line;
-            String[] args = exec(file.getAbsolutePath());
-            Process proc = new ProcessBuilder(args).start();
-            BufferedReader reader =  
-                new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        
-            while((line = reader.readLine()) != null) {
-                output.appendText(line + "\n");
-            }
-        
-            proc.waitFor();
-        }else{
-            error.showAndWait();
-        }
+        String args = exec(file.getAbsolutePath());
+        Process child = Runtime.getRuntime().exec(args);
         
     }
     
     @FXML
     private void buildProgram(){
+        try {
+            runProgram();
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(CobraIDEController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @FXML
@@ -210,14 +195,16 @@ public class CobraIDEController implements Initializable {
         }
     }
     
-    private String[] exec(String src){
+    private String exec(String src){
         String os = System.getProperty("os.name").toLowerCase();
         
-        String[] linuxExec = new String[] {"/bin/bash", "-c", "cd "+System.getProperty("user.dir")+
-                "/src/cobra/cobraVM;"+"python main.py "+ src};
+        String linuxExec = "usr/bin/xterm python "+
+                System.getProperty("user.dir")+
+                "\\src\\cobra\\cobraVM\\main.py "+src;
         
-        String[] winExec = new String[] {"CMD", "C", "cd "+System.getProperty("user.dir")+
-                "/src/cobra/cobraVM;"+"python main.py "+ src};
+        String winExec = "cmd.exe /C start python "+
+                System.getProperty("user.dir")+
+                "\\src\\cobra\\cobraVM\\main.py "+src;
         
         if (os.equals("linux"))
             return linuxExec;
@@ -225,7 +212,6 @@ public class CobraIDEController implements Initializable {
             return winExec;
         else
             return null;
-        
     }
     
     private boolean changed = false;
@@ -268,9 +254,6 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     Stage primaryStage;
-    
-    @FXML
-    TextArea output = new TextArea();
     
     
 }

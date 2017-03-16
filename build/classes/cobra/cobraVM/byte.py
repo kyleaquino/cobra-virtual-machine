@@ -1,39 +1,49 @@
-import sys
-import parser
+import parse
 
-OP_EOP = "END"
-OP_PRINT = "PRNT"
-OP_ADD = "ADD"
-OP_SUB = "SUB"
-OP_MUL = "MUL"
-OP_DIV = "DIV"
-OP_OUT = "OUT"
-OP_MOD = "MOD"
-OP_ASG = "ASGN"
+
+OP_ADD = "04" 
+OP_SUB = "05"
+OP_MUL = "06"
+OP_DIV = "07"
+OP_OUT = "01"
+OP_MOD = "08"
+#OP_ASG = "ASGN"
+OP_FOR = "02"
+OP_SCN = "03"
+
+
+func = "04","05","06","07","01","08","02","03"
 
 def execute_program(l):
 	loop = 1
 	i = 0
+	tmp = 0
 	while loop:
+                #print "BEFORE:"+str(l[i])
                 split = l[i].split(">>")
-                
+                #print "SPLIT:"+str(split)
 		instruction = split[0]
-		print split[0]
-                if instruction == OP_EOP:
+		#print str(split) +":instructions"
+                if instruction == split[-1]:
 			loop = 0
 		elif instruction== OP_ADD:
-			parser.do_ADD(split)
+			tmp=parse.do_ADD(split)
 		elif instruction== OP_SUB:
-			parser.do_SUB(split)
+			tmp=parse.do_SUB(split)
 		elif instruction== OP_MUL:
-			parser.do_MUL(split)
+			tmp=parse.do_MUL(split)
 		elif instruction== OP_DIV:
-			parser.do_DIV(split)
+			tmp=parse.do_DIV(split)
 		elif instruction== OP_OUT:
-			parser.do_OUT(split)
+			tmp=parse.do_OUT(split)
 		elif instruction== OP_MOD:
-			parser.do_MOD(split)
-		elif instruction== OP_ASG:
-			parser.do_ASG(split)	
+			tmp=parse.do_MOD(split)
+		elif instruction== OP_FOR:
+			parse.do_FOR(split)
+		elif instruction== OP_SCN:
+			parse.do_SCN(split)
+		else:
+                        parse.do_ASG(split)
+                        
 		i += 1
-
+        return tmp

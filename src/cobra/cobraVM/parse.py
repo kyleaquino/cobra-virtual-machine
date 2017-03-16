@@ -1,26 +1,20 @@
+import byte
 
 var = []
 val = []
-
-OP_PRINT = "PRNT"
-OP_ADD = "ADD" 
-OP_SUB = "SUB"
-OP_MUL = "MUL"
-OP_DIV = "DIV"
-OP_OUT = "OUT"
-OP_MOD = "MOD"
-OP_ASG = "ASGN"
-OP_FOR = "FOR"
-OP_SCN = "SCN"
 
 def do_OUT(split):
         st=""
         if split[1] in var:
             var_index = var.index(split[1])
             st+= val[var_index]
+        elif split[1]=="ALL":
+                for i in var:
+                        print i +"="+str(val[var.index(i)])
         else:    
-            st+=split[1]
+            print str(split[1])
         print st
+        
         
 def do_ADD(split):
         ans = 0
@@ -34,10 +28,10 @@ def do_ADD(split):
                         ans = y
         else:
                 ans = int(split[1][0])
-        print "Answer: "
-        print ans
+        #print "Answer: "
+        #print ans
         for x in split[1][1:]:
-                print x
+                #print x
                 if(x.isdigit()):
                         x = int(x)
                 if(x in var):
@@ -46,7 +40,8 @@ def do_ADD(split):
                         y = int(y)
                         x = y
                 ans+=x
-        print ans
+        #print ans
+        return ans
         
 def do_SUB(split):
         ans = 0
@@ -60,10 +55,10 @@ def do_SUB(split):
                         ans = y
         else:
                 ans = int(split[1][0])
-        print "Answer: "
-        print ans
+        #print "Answer: "
+        #print ans
         for x in split[1][1:]:
-                print x
+                #print x
                 if(x.isdigit()):
                         x = int(x)
                 if(x in var):
@@ -72,7 +67,8 @@ def do_SUB(split):
                         y = int(y)
                         x = y
                 ans-=x
-        print ans
+        #print ans
+        return ans
 
 def do_MUL(split):
         ans = 0
@@ -98,7 +94,8 @@ def do_MUL(split):
                         y = int(y)
                         x = y
                 ans*=x
-        print ans
+        #print ans
+        return ans
 
 def do_DIV(split):
         ans = 0
@@ -124,8 +121,8 @@ def do_DIV(split):
                         y = float(y)
                         x = y
                 ans/=x
-        print ans
-      
+        #print ans
+        return ans
     
 def do_MOD(split):
         ans = 0
@@ -151,36 +148,51 @@ def do_MOD(split):
                         y = int(y)
                         x = y
                 ans%=x
-        print ans
+        #print ans
+        return ans
 
 def do_ASG(split):
         global var
         global val
+        func = "04","05","06","07","01","08"
+        asg = 0
         token = split
-        print token
-        var.append(token[0])
-        val.append(token[1])
+        if token[0] in var:
+                if token[1] in var:
+                        tmp = var.index(token[1])
+                        val[var.index(token[0])]=val[tmp]
+                else:
+                        #print str(token[0])+":token[0]"
+                        val[var.index(token[0])]=token[1]
+        else:
+                if token[1] in func:
+                        string = token[1:]
+                        string = str('>>'.join(string))
+                        string = string.split()
+                        string.append("00")
+                        #print "this is asgn:"+str(string)
+                        asg = byte.execute_program(string)
+                        #print "asg:" + str(asg)
+                        var.append(token[0])
+                        val.append(str(asg))
+                elif token[1].isdigit():
+                        var.append(token[0])
+                        val.append(token[1])
+        #print var
+        #print val
+                        
 def do_FOR(split):
         count = int(split[1])
         loop = 0
-        string = []
-        string.append(split[2])
-        string.append(split[3])
-        print string
+        string=""
+        string +=str(split[2])+">>"+str(split[3])
+        string = string.split("\n")
+        string.append("END")
+        #string.append(split[2])
+        #string.append(split[3])
+        #print string
         for x in range(count):
-                instruction = string[0]
-                if instruction== OP_ADD:
-			do_ADD(string)
-		elif instruction== OP_SUB:
-			do_SUB(string)
-		elif instruction== OP_MUL:
-			do_MUL(string)
-		elif instruction== OP_DIV:
-			do_DIV(string)
-		elif instruction== OP_OUT:
-			do_OUT(string)
-		elif instruction== OP_MOD:
-			do_MOD(string)
+                byte.execute_program(string)
 def do_SCN(split):
         global var,val
         var.append(split[1])
