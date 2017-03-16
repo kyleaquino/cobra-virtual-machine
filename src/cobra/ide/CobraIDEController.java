@@ -11,20 +11,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import static java.lang.System.exit;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
@@ -120,7 +115,6 @@ public class CobraIDEController implements Initializable {
         saveFile();
         String args = exec(file.getAbsolutePath());
         Process child = Runtime.getRuntime().exec(args);
-        
     }
     
     @FXML
@@ -216,8 +210,6 @@ public class CobraIDEController implements Initializable {
     
     private boolean changed = false;
     private File file; 
-    private final Alert confirm = new Alert(AlertType.CONFIRMATION,"Do you want to save file?");
-    private final Alert error = new Alert(AlertType.ERROR,"SOURCE FILE NOT FOUND");
     
     @FXML
     TextArea workspace = new TextArea();
