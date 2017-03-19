@@ -69,7 +69,7 @@ semicolon = "SEMICOLON"
 quote = "QUOTE"
 var = "VAR"
 
-restricted_keyword_var = io + loops + conditionalOperator + logicalOperator + seperator
+restricted_keyword_var = loops + conditionalOperator + logicalOperator + [io[0]] + [seperator[0:2]]
 restricted_keyword_io = loops + conditionalOperator + logicalOperator
 
 def parse(source,tokens):
@@ -101,7 +101,6 @@ def generateBytecode(source, tokens):
 
 def check_var(tokens,i):
     expression = getExpression(tokens,i,"SEMICOLON")
-    print expression
     for i, tok in enumerate(expression):
         if if_restricted_keyword_var(tok):
             exit("ERROR: Cannot use system-defined keyword ("+bytecode.get(tok)+") in line: "+ getOriginalExpression(expression))
@@ -113,7 +112,7 @@ def check_var(tokens,i):
 
 def check_io(tokens,i):
     expression = getExpression(tokens,i,"SEMICOLON")
-
+    print expression
     for tok in expression:
         if if_restricted_keyword_io(tok):
             exit("ERRROR: Cannot use a system-defined keyword ("+bytecode.get(tok)+"): "+ getOriginalExpression(expression))
@@ -149,11 +148,11 @@ def refactor_quote(tokens): # Refactor mistaken keywords inside string keyword
             while loop:
                 if count+1 != len(tokens):
                     break
-                if firstquote:
+                elif firstquote:
                     if tokens[count+1] == quote:
                         firstquote = False
                         break
-                    if tokens[count+1] in bytecode:
+                    elif tokens[count+1] in bytecode:
                         tokens[count+1] = bytecode.get(tokens[count+1])
                 else:
                     count+=1
@@ -209,7 +208,7 @@ def if_Var(tok, expression): # ERROR! if var keyword called twice
 
 def if_Scan(tok,expression):
     if tok == "SCAN":
-        if expression.count("SCAN") == 1:
+        if expression.count("SCAN") == 1 and "STARTPAR" in expression and "ENDPAR" in expression:
             return False
         else:
             return True
@@ -218,7 +217,7 @@ def if_Scan(tok,expression):
 
 def if_Print(tok,expression):
     if tok == "PRINT":
-        if expression.count("PRINT") == 1:
+        if expression.count("PRINT") == 1 and "STARTPAR" in expression and "ENDPAR" in expression:
             return False
         else:
             return True
