@@ -114,7 +114,7 @@ public class CobraIDEController implements Initializable {
     private void runProgram() throws IOException, InterruptedException{
         saveFile();
         String args = exec(file.getAbsolutePath());
-        Process child = Runtime.getRuntime().exec(args);
+        Runtime.getRuntime().exec(args);
     }
     
     @FXML
@@ -157,14 +157,14 @@ public class CobraIDEController implements Initializable {
         
         file = dialog.showSaveDialog(primaryStage);
         
-        try (FileWriter fileWriter = new FileWriter(file.getAbsoluteFile()+".cob")) {
+        try (PrintWriter fileWriter = new PrintWriter(file.getAbsoluteFile()+".cob")) {
             fileWriter.write(workspace.getText());
             changed = false;
             filename.setText("FILENAME: "+file);
         }
     }
     
-    private void editFile() throws FileNotFoundException{
+    private void editFile() throws IOException{
 
         String text = workspace.getText();
         try (PrintWriter writer = new PrintWriter(file)) {
@@ -191,18 +191,18 @@ public class CobraIDEController implements Initializable {
     
     private String exec(String src){
         String os = System.getProperty("os.name").toLowerCase();
-        
+
         String linuxExec = "xterm -hold -e python " +
                 System.getProperty("user.dir")+
                 "/src/cobra/cobraVM/main.py "+src;
         
-        String winExec = "cmd.exe /C start python "+
+        String winExec = "cmd /c start cmd /k python \""+
                 System.getProperty("user.dir")+
-                "\\src\\cobra\\cobraVM\\main.py "+src;
+                "\\src\\cobra\\cobraVM\\VM\\CobraMain.py\" \""+src+"\"";
         
-        if (os.equals("linux"))
+        if (os.contains("linux"))
             return linuxExec;
-        if (os.equals("win"))
+        if (os.contains("windows"))
             return winExec;
         else
             return null;
