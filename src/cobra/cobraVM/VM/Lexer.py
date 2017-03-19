@@ -1,6 +1,6 @@
 import re
 
-statement = {
+statement = {                       # Source code into statement dicitonary
     "+":" PLUS ",
     "-":" MINUS ",
     "*":" TIMES ",
@@ -27,7 +27,7 @@ statement = {
     }
 
 def tokenize(src):
-    for key in statement:
-        if key in src:
+    for key in statement:              # Loop through statements using key
+        if key in src:                 # If key is in the file, convert all source code into a statement
             src = src.replace(key,statement.get(key))
-    return src
+    return src                         # Return string line

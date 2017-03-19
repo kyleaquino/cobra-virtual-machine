@@ -8,5 +8,5 @@ def run(source):
     bytecode = Parser.parse(source,tokens)  # Generate bytecode file
     #execute(bytecode)                      # Execute program using the bytecode file
 
-def execute(byc):
+def execute(byc): # Mimic parser functions but for only direct running of functions
     return 0

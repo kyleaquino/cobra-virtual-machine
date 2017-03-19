@@ -69,15 +69,15 @@ var = "VAR"
 
 restricted_keyword_var = io + loops + conditionalOperator + logicalOperator + seperator
 
-def parse(source,tokens): #TOKENIZE - REFACTOR - BUILD BYTECODE - PASS BYTEFILE TO INTERPRETER
+def parse(source,tokens):
     tokens = tokens.split();
     checkTokens(tokens)
-    #GENERATE BYTECODE
+    return generateBytecode(tokens)
 
 def checkTokens(tokens):
 
-    if quote in tokens:
-        tokens = refactor_quote(tokens) #revert mistaken keyword conversion
+    if quote in tokens:                     # If there is a String Quote, Revert mistaken keyword conversion
+        tokens = refactor_quote(tokens)
 
     for i,tok in enumerate(tokens):
         if tok == var:
@@ -93,24 +93,20 @@ def checkTokens(tokens):
         elif tok in loops:
             check_loop(tokens,i+1)
 
+def generateBytecode():
+    return 0
+
 def check_var(tokens,i):
     expression = getExpression(tokens,i+1,"SEMICOLON")
 
-    print expression
-    isOnlyVar = True
     for i, tok in enumerate(expression):
-        if tok in restricted_keyword_var:     # if expression have a restricted keyword
-            exit("ERROR: Cannot use keyword",tok," in line: "+ getOriginalExpression(expression))
-        elif tok == var:                          # if var keyword called twice
-            if isOnlyVar:
-                isOnlyVar = False
-            else:
-                exit("ERROR: Cannot use keyword VAR in line: "+ getOriginalExpression(expression))
-        elif tok == "EQUALS":                   # if there is variable name and value
-            if expression[i-1] == var:          # if there is no varible name
-                exit("ERROR: There is no variable name in line: " + tok + " in: "+ getOriginalExpression(expression))
-            elif expression[i+1] == semicolon:
-                exit("ERROR: There is no value in line: " + tok +" in: "+ getOriginalExpression(expression))
+        if if_restricted_keyword_var(tok):
+            exit("ERROR: Cannot use keyword ",tok," in line: "+ getOriginalExpression(expression))
+        elif if_Equals(tok,expression):
+            exit("ERROR: There is an argument missing in line: " + tok + " in: "+ getOriginalExpression(expression))
+        elif if_Var(tok, expression):
+            exit("ERROR: Cannot use keyword VAR in line: "+ getOriginalExpression(expression))
+
 
 def check_io(tokens,i):
     return 0
@@ -193,3 +189,21 @@ def getOriginalExpression(expression):
                 expr[i] = bytecode.get(tok)
 
     return " ".join(expr)
+
+def if_restricted_keyword_var(tok):      # ERROR! if expression have a restricted keyword
+    return tok in restricted_keyword_var:
+
+def if_Equals(tok,expression):           # ERROR!  if there is variable name or value
+    if tok == "EQUALS":
+        return expression[i-1] == var or expression[i+1] == semicolon:
+    else:
+        return False
+
+def if_Var(tok, expression):
+    if tok == "VAR":                      # ERROR! if var keyword called twice
+        if expression.count("VAR") == 1:
+            return True
+        else:
+            return False
+    else:
+        return false
