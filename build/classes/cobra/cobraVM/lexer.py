@@ -4,7 +4,6 @@ import byte
 def load_program(argv):
         lines = argv
 	lines = lines.split("\n")
-	#print lines
 	return lines
 
 def run_program(argv):
@@ -20,4 +19,3 @@ def target(*args):
 
 if __name__ == '__main__':
 	main(sys.argv)
-

@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.exit;
@@ -46,9 +45,7 @@ public class CobraIDEController implements Initializable {
        openButton.setTooltip(new Tooltip("Open"));
        redoButton.setTooltip(new Tooltip("Redo"));
        undoButton.setTooltip(new Tooltip("Undo"));
-       buildButton.setTooltip(new Tooltip("Build"));
        runButton.setTooltip(new Tooltip("Run"));
-       buildRunButton.setTooltip(new Tooltip("Build & Run"));
     }
     
     @FXML
@@ -117,25 +114,6 @@ public class CobraIDEController implements Initializable {
         Runtime.getRuntime().exec(args);
     }
     
-    @FXML
-    private void buildProgram(){
-        try {
-            runProgram();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CobraIDEController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    @FXML
-    private void runBuildProgram(){
-        try {
-            buildProgram();
-            runProgram();
-        } catch (InterruptedException | IOException ex) {
-            Logger.getLogger(CobraIDEController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     private String read(File file) throws IOException{
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -165,7 +143,6 @@ public class CobraIDEController implements Initializable {
     }
     
     private void editFile() throws IOException{
-
         String text = workspace.getText();
         try (PrintWriter writer = new PrintWriter(file)) {
                 writer.write(text);
@@ -198,7 +175,7 @@ public class CobraIDEController implements Initializable {
         
         String winExec = "cmd /c start cmd /k python \""+
                 System.getProperty("user.dir")+
-                "\\src\\cobra\\cobraVM\\VM\\CobraMain.py\" \""+src+"\"";
+                "\\src\\cobra\\cobraVM\\main.py\" \""+src+"\"";
         
         if (os.contains("linux"))
             return linuxExec;
@@ -234,12 +211,6 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     Button runButton = new Button();
-    
-    @FXML
-    Button buildButton = new Button();
-    
-    @FXML
-    Button buildRunButton = new Button();
     
     @FXML
     AnchorPane stage;

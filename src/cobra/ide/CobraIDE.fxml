@@ -37,8 +37,6 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Program">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#runBuildProgram" text="Build &amp; Run" />
-                  <MenuItem mnemonicParsing="false" onAction="#buildProgram" text="Build" />
                   <MenuItem mnemonicParsing="false" onAction="#runProgram" text="Run" />
             </items>
           </Menu>
@@ -111,28 +109,6 @@
             <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../resources/play.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         <effect>
-            <SepiaTone level="0.15" />
-         </effect></Button>
-      <Button fx:id="buildButton" layoutX="364.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
-         <graphic>
-            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/build.jpg" />
-               </image>
-            </ImageView>
-         </graphic>
-         <effect>
-            <SepiaTone level="0.15" />
-         </effect></Button>
-      <Button fx:id="buildRunButton" layoutX="423.0" layoutY="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
-         <graphic>
-            <ImageView fitHeight="40.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/bnr.png" />
                </image>
             </ImageView>
          </graphic>

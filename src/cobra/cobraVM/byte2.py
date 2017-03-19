@@ -1,7 +1,7 @@
 import sys
-import lexer 
+import lexer
 
-bytecode = "END","OUT","FOR","SCN"
+bytecode = "END","OUT","FOR","SCN","IF","<<","WHL"
 bytecode2 = "ADD","SUB","MUL","DIV","MOD"
 
 def main(argv):
@@ -24,7 +24,7 @@ def bc(source):
         if i[0] in bytecode:
             if i[0] == "END":
                 str += "00" + "\n"
-            elif i[0] == "OUT": 
+            elif i[0] == "OUT":
                 str += "01>>"
                 if i[1] in bytecode2:
                     if i[1] == "ADD":
@@ -40,14 +40,17 @@ def bc(source):
                 else:
                     str += i[1]+"\n"
             elif i[0] == "FOR":
-                str += "02>>" + i[1]+ ">>"
-                if i[2] == "OUT":
-                    str += "01>>" + i[3]+"\n"
+                str += "02>>" + i[1]+ ">>\n"
             elif i[0] == "SCN":
                     str += "03>>" + i[1]+"\n"
+            elif i[0] == "IF":
+               str += "09>>"+i[1]+">>\n"
+            elif i[0] == "WHL":
+                str += "10>>"+i[1]+">>\n"
+            elif i[0] == "<<":
+                str +="<<"+"\n"
         else :
             if i[1] in bytecode2:
-                #print i[2]
                 str += i[0] + ">>"
                 if i[1] == "ADD":
                     str += "04>>" + i[2]+"\n"
@@ -61,12 +64,11 @@ def bc(source):
                     str += "08>>" + i[2]+"\n"
             else:
                 str += i[0] + ">>" + i[1] + "\n"
-    print str
     return str
-    
+
 def write(byte,argv):
-    argv = argv.replace(".vm","")
-    f = open(argv+".byc","w+")
+    argv = argv.replace(".cob",".byc")
+    f = open(argv,"w+")
     f.write(byte)
     f.close()
 

@@ -22,6 +22,7 @@ def execute(byc): # Mimic parser functions but for only direct running of functi
 
 def do_VAR(byc,i):
     expr = Parser.getExpression(byc,i,"SEMICOLON")
+    return 0
 
 def do_PRINT(byc,i):
     expr = Parser.getExpression(byc,i,"SEMICOLON")
