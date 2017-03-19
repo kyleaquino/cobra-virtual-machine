@@ -92,7 +92,7 @@ def checkTokens(tokens): # Code Recoginition method of the virtual machine
         elif tok in logicalOperator:
             check_logical(tokens,i)
         elif tok in conditionalOperator:
-            check_coditional(tokens,i)
+            check_conditional(tokens,i)
         elif tok in loops:
             check_loop(tokens,i+1)
 
@@ -131,7 +131,7 @@ def check_logical(tokens,i):
     expression = getExpression(tokens,i,"SEMICOLON")
     return 0
 
-def check_coditional(tokens,i):
+def check_conditional(tokens,i):
     expression = getExpression(tokens,i,"SEMICOLON")
     return 0
 
