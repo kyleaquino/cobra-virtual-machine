@@ -14,8 +14,6 @@ import java.io.PrintWriter;
 import static java.lang.System.exit;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -34,12 +32,11 @@ import javafx.stage.Stage;
 public class CobraIDEController implements Initializable {
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-        initButtons();
+    public void initialize(URL url, ResourceBundle rb){
+        init();
     }
     
-    private void initButtons(){
+    private void init(){
        newButton.setTooltip(new Tooltip("New"));
        saveButton.setTooltip(new Tooltip("Save"));
        openButton.setTooltip(new Tooltip("Open"));
@@ -109,8 +106,13 @@ public class CobraIDEController implements Initializable {
     
     @FXML
     private void runProgram() throws IOException, InterruptedException{
-        saveFile();
-        String args = exec(file.getAbsolutePath());
+        if (vmdir==null)
+            vmDirectory();
+        if(workspace.getText().equals(""))
+            openFile();
+        else
+            saveFile();
+        String args = exec(file.getAbsolutePath(), vmdir.getAbsolutePath());
         Runtime.getRuntime().exec(args);
     }
     
@@ -166,16 +168,25 @@ public class CobraIDEController implements Initializable {
         }
     }
     
-    private String exec(String src){
+    private void vmDirectory() throws FileNotFoundException{
+        FileChooser choose = new FileChooser();
+        choose.setTitle("VM Directory");
+        try{
+            primaryStage = (Stage)workspace.getScene().getWindow();
+            vmdir = choose.showOpenDialog(primaryStage);
+        }catch(Exception e){
+            System.out.print(e);
+        }
+    }
+    
+    private String exec(String src, String vmdir){
         String os = System.getProperty("os.name").toLowerCase();
 
         String linuxExec = "xterm -hold -e python " +
-                System.getProperty("user.dir")+
-                "/src/cobra/cobraVM/main.py "+src;
+                vmdir+" "+src;
         
-        String winExec = "cmd /c start cmd /k python \""+
-                System.getProperty("user.dir")+
-                "\\src\\cobra\\cobraVM\\main.py\" \""+src+"\"";
+        String winExec = "cmd /c start cmd /k python "+
+                "\""+vmdir+"\""+" \""+src+"\"";
         
         if (os.contains("linux"))
             return linuxExec;
@@ -186,8 +197,8 @@ public class CobraIDEController implements Initializable {
     }
     
     private boolean changed = false;
-    private File file; 
-    
+    private File file = null; 
+    private File vmdir = null;
     @FXML
     TextArea workspace = new TextArea();
     
