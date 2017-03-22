@@ -13,11 +13,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.exit;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -105,15 +109,108 @@ public class CobraIDEController implements Initializable {
     }
     
     @FXML
+    private void initVM() throws FileNotFoundException{
+        vmDirectory();
+    }
+    
+    @FXML
     private void runProgram() throws IOException, InterruptedException{
-        if (vmdir==null)
+        if (vmdir==null){
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Virtual Machine Directory");
+            alert.setHeaderText("Missing VM Directory");
+            alert.setContentText("Please open the Cobra++ VM main file ");
+            alert.showAndWait();
             vmDirectory();
+        }
+            
         if(workspace.getText().equals(""))
             openFile();
         else
             saveFile();
         String args = exec(file.getAbsolutePath(), vmdir.getAbsolutePath());
         Runtime.getRuntime().exec(args);
+    }
+    
+    @FXML
+    private void printFunction(){
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText(textDialog("PRINT","OUT>>","Please Input what to print"));
+       
+        
+    }
+    
+    @FXML
+    private void scanFunction(){
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText(textDialog("SCAN","SCN>>","Please input the variable name"));
+    }
+    
+    @FXML
+    private void insertVarFunction(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("INSERT VARIABLE Function");
+        dialog.setHeaderText("Please input the variable name");
+        
+        TextInputDialog dialog2 = new TextInputDialog();
+        dialog2.setTitle("INSERT VARIABLE Function");
+        dialog2.setHeaderText("Please input its value");
+        
+
+        Optional<String> result = dialog.showAndWait();
+        String varName = "";
+        String varValue = "";
+
+        if (result.isPresent()) {
+            varName = result.get();
+        }
+        
+        result = dialog2.showAndWait();
+        if (result.isPresent()) {
+            varValue = result.get();
+        }
+        
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText(varName+">>"+varValue);
+        
+    }
+    
+    @FXML
+    private void forLoopFunction(){
+        String loop = textDialog("FOR LOOP","","Input how many loops");
+        String forStatement = "FOR>>"+loop+">>\n"+"//TODO"+"\n<<";
+        
+        
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText(forStatement);
+        
+    }
+    
+    @FXML
+    private void ifStatementFunction(){
+        String condition = textDialog("IF STATEMENT","","Input If condition");
+        String ifStatement = "IF>>"+condition+">>\n"+"//TODO"+"\n<<";
+        
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText(ifStatement);
+    }
+    
+    @FXML
+    private void endFunction(){
+        if(!workspace.getText().isEmpty())
+            workspace.appendText("\n");
+        
+        workspace.appendText("END");
     }
     
     private String read(File file) throws IOException{
@@ -195,6 +292,23 @@ public class CobraIDEController implements Initializable {
         else
             return null;
     }
+    
+    private String textDialog(String functionType, String statement, String headerText){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(functionType+" Function");
+        dialog.setHeaderText(headerText);
+
+        Optional<String> result = dialog.showAndWait();
+        String entered = "";
+
+        if (result.isPresent()) {
+
+            entered = result.get();
+        }
+        
+        return (statement+entered);
+    }
+    
     
     private boolean changed = false;
     private File file = null; 
